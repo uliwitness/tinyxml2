@@ -446,7 +446,6 @@ bool XMLUtil::ToInt( const char* str, int* value )
     return false;
 }
 
-
 bool XMLUtil::ToUnsigned( const char* str, unsigned *value )
 {
     if ( TIXML_SSCANF( str, "%u", value ) == 1 ) {
@@ -581,8 +580,7 @@ XMLNode::XMLNode( XMLDocument* doc ) :
     _parent( 0 ),
     _firstChild( 0 ), _lastChild( 0 ),
     _prev( 0 ), _next( 0 ),
-    _memPool( 0 ),
-	_forceCompactMode( false )
+    _memPool( 0 )
 {
 }
 
@@ -1305,47 +1303,11 @@ void XMLElement::SetText( float v )
 }
 
 
-void XMLElement::SetText( double v )
+void XMLElement::SetText( double v ) 
 {
     char buf[BUF_SIZE];
     XMLUtil::ToStr( v, buf, BUF_SIZE );
     SetText( buf );
-}
-
-
-void	XMLElement::SetBoolFirstChild( bool inBool )
-{
-	XMLElement	*	theBoolElem = FirstChild() ? FirstChild()->ToElement() : NULL;
-	if( theBoolElem
-		&& (strcmp(theBoolElem->Value(),"true") == 0 || strcmp(theBoolElem->Value(),"false") == 0) ) {
-		theBoolElem->SetValue( inBool ? "true" : "false" );
-	}
-	else if( !FirstChild() ) {
-		theBoolElem = GetDocument()->NewElement( inBool ? "true" : "false" );
-		InsertFirstChild( theBoolElem );
-	}
-}
-
-
-XMLError	XMLElement::QueryBoolFirstChild( bool *outBool )
-{
-	if ( FirstChild() )
-	{
-		if ( FirstChild()->ToElement() )
-		{
-			bool	isTrue = strcmp( FirstChild()->Value(), "true" ) == 0;
-			bool	isFalse = strcmp( FirstChild()->Value(), "false" ) == 0;
-			if( !isTrue && !isFalse )
-				return XML_CAN_NOT_CONVERT_TEXT;
-			
-			*outBool = isTrue;
-			return XML_SUCCESS;
-		}
-		else
-			return XML_NO_ELEMENT_NODE;
-	}
-	else
-		return XML_NO_ELEMENT_NODE;
 }
 
 

@@ -117,13 +117,10 @@ inline int TIXML_SNPRINTF( char* buffer, size_t size, const char* format, ... )
 #endif
 
 /* Versioning, past 1.0.14:
-
-	A backwards-incompatible change or API change bumps the major version.
-	An API addition or a backwards-compatible change, bumps the minor version.
-	Simple bug fixes bump the build number.
+	http://semver.org/
 */
-static const int TIXML2_MAJOR_VERSION = 1;
-static const int TIXML2_MINOR_VERSION = 1;
+static const int TIXML2_MAJOR_VERSION = 2;
+static const int TIXML2_MINOR_VERSION = 0;
 static const int TIXML2_PATCH_VERSION = 0;
 
 namespace tinyxml2
@@ -827,7 +824,7 @@ public:
 
     // internal
     virtual char* ParseDeep( char*, StrPair* );
-	
+
 protected:
     XMLNode( XMLDocument* );
     virtual ~XMLNode();
@@ -843,8 +840,6 @@ protected:
 
     XMLNode*		_prev;
     XMLNode*		_next;
-	
-	bool			_forceCompactMode;
 
 private:
     MemPool*		_memPool;
@@ -1022,8 +1017,7 @@ enum XMLError {
     XML_ERROR_PARSING,
 
     XML_CAN_NOT_CONVERT_TEXT,
-    XML_NO_TEXT_NODE,
-	XML_NO_ELEMENT_NODE
+    XML_NO_TEXT_NODE
 };
 
 
@@ -1423,52 +1417,7 @@ public:
     void SetText( double value );  
     /// Convenience method for setting text inside and element. See SetText() for important limitations.
     void SetText( float value );  
-	
-	/// Convenience for QueryIntText when you don't care if the text won't convert.
-	int		IntText()
-	{
-		int		i = 0;
-		QueryIntText( &i );
-		return i;
-	}
 
-	/// Convenience for QueryUnsignedText when you don't care if the text won't convert.
-	unsigned	UnsignedText()
-	{
-		unsigned		i = 0;
-		QueryUnsignedText( &i );
-		return i;
-	}
-
-	/// Convenience for QueryDoubleText when you don't care if the text won't convert.
-	double	DoubleText()
-	{
-		double		i = 0;
-		QueryDoubleText( &i );
-		return i;
-	}
-
-	/// Convenience for QueryFloatText when you don't care if the text won't convert.
-	float	FloatText()
-	{
-		float		i = 0;
-		QueryFloatText( &i );
-		return i;
-	}
-
-    /// Adds a sub-element equivalent to the given boolean.
-	void		SetBoolFirstChild( bool inBool );
-	
-    /// Looks for a &lt;true /&gt; or &lt;false /&gt; as the first child and returns the corresponding bool.
-	bool		BoolFirstChild()
-	{
-		bool	b = false;
-		QueryBoolFirstChild(&b);
-		return b;
-	}
-
-	XMLError	QueryBoolFirstChild( bool *outBool );
-	
     /**
     	Convenience method to query the value of a child text node. This is probably best
     	shown by example. Given you have a document is this form:
@@ -1517,7 +1466,7 @@ public:
     char* ParseDeep( char* p, StrPair* endTag );
     virtual XMLNode* ShallowClone( XMLDocument* document ) const;
     virtual bool ShallowEqual( const XMLNode* compare ) const;
-	
+
 private:
     XMLElement( XMLDocument* doc );
     virtual ~XMLElement();
@@ -2082,7 +2031,7 @@ public:
     }
 
 protected:
-	virtual bool CompactMode( const XMLElement& elem )	{ return _compactMode; };
+	virtual bool CompactMode( const XMLElement& )	{ return _compactMode; };
 
 	/** Prints out the space before an element. You may override to change
 	    the space and tabs used. A PrintSpace() override should call Print().
